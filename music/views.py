@@ -35,3 +35,17 @@ def song_detail(request, pk):
     elif request.method == 'DELETE':
         song.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['PUT'])
+def song_like(request, pk):
+    if request.method == 'PUT':
+        song = get_object_or_404(Song, pk=pk)
+        song.likes += 1
+        song_serializer = SongsSerializer(song)
+        serializer = SongsSerializer(song, song_serializer.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        print(serializer.data)
+        return Response(status=status.HTTP_202_ACCEPTED)
+    
